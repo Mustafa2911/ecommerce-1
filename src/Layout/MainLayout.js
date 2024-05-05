@@ -7,9 +7,7 @@ import Toolbar from "@mui/material/Toolbar";
 const MainLayout = () => {
   return (
     <Box sx={{ display: "flex" }}>
-      <header>
-        <NavBar />
-      </header>
+      <NavBar />
       <Box component='main' sx={{ p: 3 }}>
         <Toolbar />
         <Outlet />
