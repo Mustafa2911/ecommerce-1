@@ -106,6 +106,9 @@ function NavBar(props) {
               onClick={(e) => handleMenuClick(e, item.name)}
               aria-controls={`menu-${index}`}
               aria-haspopup='true'
+              sx={{
+                color: "black",
+              }}
               endIcon={<KeyboardArrowDown />}
             >
               {item.name}
@@ -134,10 +137,6 @@ function NavBar(props) {
             key={index}
             sx={{
               color: "black",
-              backgroundColor:
-                selectedItem === item.name
-                  ? "rgba(0, 0, 0, 0.04)"
-                  : "transparent",
             }}
             onClick={() => handleNavItemClick(item.name)}
           >
