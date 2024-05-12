@@ -10,6 +10,7 @@ const MainLayout = () => {
       <NavBar />
       <Box component='main' sx={{ p: 3 }}>
         <Toolbar />
+        <Toolbar sx={{ display: { sm: "none" } }} />
         <Outlet />
       </Box>
     </Box>

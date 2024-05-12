@@ -19,14 +19,16 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { useTheme } from "@mui/material/styles";
 import Logo from "./logo.svg";
 import Divider from "@mui/material/Divider";
+import FormControl from "@mui/material/FormControl";
+import OutlinedInput from "@mui/material/OutlinedInput";
 
 const drawerWidth = 240;
-const navItems = ["Home", "About", "Contact"];
+const navItems = ["About", "Contact", "Category", "Brands"];
 
 function NavBar(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [selectedItem, setSelectedItem] = React.useState(null);
+  const [selectedItem, setSelectedItem] = React.useState("Home");
   const theme = useTheme();
 
   const handleDrawerToggle = () => {
@@ -96,16 +98,6 @@ function NavBar(props) {
             >
               <MenuIcon />
             </IconButton>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
-              <img
-                src={Logo}
-                alt='Logo'
-                style={{
-                  flexGrow: 1,
-                  marginRight: "16px",
-                }}
-              />
-            </Box>
 
             <Box sx={{ display: { xs: "none", sm: "flex" } }}>
               {navItems.map((item) => (
@@ -125,20 +117,35 @@ function NavBar(props) {
               ))}
             </Box>
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <TextField
-              placeholder='   What are you looking for?'
-              id='input-with-icon-textfield'
-              sx={{ color: "black" }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='start'>
-                    <SearchRounded sx={{ color: "black" }} />
-                  </InputAdornment>
-                ),
+          <Box sx={{ display: { xs: "inline-flex" }, alignItems: "center" }}>
+            <img
+              src={Logo}
+              alt='Logo'
+              style={{
+                flexGrow: 1,
+                marginRight: "16px",
               }}
-              variant='standard'
             />
+          </Box>
+
+          <Box
+            sx={{ display: { sm: "flex", xs: "none" }, alignItems: "center" }}
+          >
+            <FormControl sx={{ m: 1, width: "25ch" }} variant='outlined'>
+              <OutlinedInput
+                size='small'
+                placeholder='Search...'
+                id='search'
+                type='text'
+                endAdornment={
+                  <InputAdornment position='end'>
+                    <IconButton className='p-0'>
+                      <SearchRounded sx={{ color: "black" }} />
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
             <IconButton sx={{ color: "black" }} size='large'>
               <LocationOnOutlinedIcon />
             </IconButton>
@@ -146,7 +153,27 @@ function NavBar(props) {
               <ShoppingCartOutlinedIcon />
             </IconButton>
           </Box>
+          <IconButton
+            sx={{ display: { sm: "none" }, color: "black" }}
+            size='large'
+          >
+            <ShoppingCartOutlinedIcon />
+          </IconButton>
         </Toolbar>
+        <FormControl sx={{ display: { sm: "none" }, m: 1 }} variant='outlined'>
+          <OutlinedInput
+            placeholder='Search...'
+            id='search'
+            type='text'
+            endAdornment={
+              <InputAdornment position='end'>
+                <IconButton className='p-0'>
+                  <SearchRounded sx={{ color: "black" }} />
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
       </AppBar>
       <nav>
         <Drawer
