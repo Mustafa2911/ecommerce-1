@@ -8,28 +8,61 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
-import { SearchRounded } from "@mui/icons-material";
-import TextField from "@mui/material/TextField";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import {
+  SearchRounded,
+  KeyboardArrowDown,
+  LocationOnOutlined,
+  ShoppingCartOutlined,
+} from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import Logo from "./logo.svg";
-import Divider from "@mui/material/Divider";
 import FormControl from "@mui/material/FormControl";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import MuiAccordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Divider } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 const drawerWidth = 240;
-const navItems = ["About", "Contact", "Category", "Brands"];
-
+const navItems = [
+  {
+    name: "About",
+  },
+  {
+    name: "Contact",
+  },
+  {
+    name: "Category",
+    children: ["Category 1", "Category 2", "Category 3"],
+  },
+  {
+    name: "Brands",
+    children: ["Brand A", "Brand B", "Brand C"],
+  },
+];
+const Accordion = styled((props) => (
+  <MuiAccordion disableGutters elevation={0} square {...props} />
+))(({ theme }) => ({
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  "&::before": {
+    display: "none",
+  },
+}));
 function NavBar(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [selectedItem, setSelectedItem] = React.useState("Home");
+  const [selectedItem, setSelectedItem] = React.useState("");
   const theme = useTheme();
+  const [anchorElCategory, setAnchorElCategory] = React.useState(null);
+  const [anchorElBrands, setAnchorElBrands] = React.useState(null);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -40,41 +73,126 @@ function NavBar(props) {
     handleDrawerToggle();
   };
 
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          py: 2,
-        }}
-      >
-        <img src={Logo} alt='Logo' />
-      </Box>
-      <Divider />
+  const handleMenuItemClick = (item) => {
+    setSelectedItem(item);
+    setAnchorElCategory(null);
+    setAnchorElBrands(null);
+  };
 
-      <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton
-              sx={{
-                textAlign: "center",
-                backgroundColor:
-                  selectedItem === item
-                    ? theme.palette.success.main
-                    : "transparent",
-              }}
-              onClick={() => handleNavItemClick(item)}
+  const handleMenuClick = (event, menu) => {
+    if (menu === "Category") {
+      setAnchorElCategory(event.currentTarget);
+      setAnchorElBrands(null);
+    } else if (menu === "Brands") {
+      setAnchorElBrands(event.currentTarget);
+      setAnchorElCategory(null);
+    }
+  };
+
+  const handleClose = (menu) => {
+    if (menu === "Category") {
+      setAnchorElCategory(null);
+    } else if (menu === "Brands") {
+      setAnchorElBrands(null);
+    }
+  };
+
+  const renderNavItems = () => {
+    return navItems.map((item, index) => {
+      if (item.children) {
+        return (
+          <div key={index}>
+            <Button
+              onClick={(e) => handleMenuClick(e, item.name)}
+              aria-controls={`menu-${index}`}
+              aria-haspopup='true'
+              endIcon={<KeyboardArrowDown />}
             >
-              <ListItemText primary={item} />
-            </ListItemButton>
-          </ListItem>
+              {item.name}
+            </Button>
+            <Menu
+              id={`menu-${index}`}
+              anchorEl={
+                item.name === "Category" ? anchorElCategory : anchorElBrands
+              }
+              open={Boolean(
+                item.name === "Category" ? anchorElCategory : anchorElBrands
+              )}
+              onClose={() => handleClose(item.name)}
+            >
+              {item.children.map((child, idx) => (
+                <MenuItem key={idx} onClick={() => handleMenuItemClick(child)}>
+                  {child}
+                </MenuItem>
+              ))}
+            </Menu>
+          </div>
+        );
+      } else {
+        return (
+          <Button
+            key={index}
+            sx={{
+              color: "black",
+              backgroundColor:
+                selectedItem === item.name
+                  ? "rgba(0, 0, 0, 0.04)"
+                  : "transparent",
+            }}
+            onClick={() => handleNavItemClick(item.name)}
+          >
+            {item.name}
+          </Button>
+        );
+      }
+    });
+  };
+  const drawer = (
+    <Box onClick={handleDrawerToggle}>
+      <List disablePadding>
+        {navItems.map((item, index) => (
+          <React.Fragment key={index}>
+            {item.children ? (
+              <>
+                <Accordion disableGutters sx={{ boxShadow: "none" }}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls={`panel${index}-content`}
+                    id={`panel${index}-header`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <ListItemText primary={item.name} />
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <List disablePadding>
+                      {item.children.map((child, idx) => (
+                        <ListItem key={idx} disablePadding>
+                          <ListItemButton
+                            onClick={() => handleNavItemClick(child)}
+                          >
+                            <ListItemText primary={child} />
+                          </ListItemButton>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </AccordionDetails>
+                </Accordion>
+              </>
+            ) : (
+              <>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => handleNavItemClick(item.name)}>
+                    <ListItemText primary={item.name} />
+                  </ListItemButton>
+                </ListItem>
+                <Divider />
+              </>
+            )}
+          </React.Fragment>
         ))}
       </List>
     </Box>
   );
-
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
@@ -100,21 +218,7 @@ function NavBar(props) {
             </IconButton>
 
             <Box sx={{ display: { xs: "none", sm: "flex" } }}>
-              {navItems.map((item) => (
-                <Button
-                  sx={{
-                    color: "black",
-                    backgroundColor:
-                      selectedItem === item
-                        ? "rgba(0, 0, 0, 0.04)"
-                        : "transparent",
-                  }}
-                  key={item}
-                  onClick={() => setSelectedItem(item)}
-                >
-                  {item}
-                </Button>
-              ))}
+              {renderNavItems()}
             </Box>
           </Box>
           <Box sx={{ display: { xs: "inline-flex" }, alignItems: "center" }}>
@@ -128,10 +232,15 @@ function NavBar(props) {
             />
           </Box>
 
-          <Box
-            sx={{ display: { sm: "flex", xs: "none" }, alignItems: "center" }}
-          >
-            <FormControl sx={{ m: 1, width: "25ch" }} variant='outlined'>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <FormControl
+              sx={{
+                display: { xs: "none", sm: "flex" },
+                m: 1,
+                width: "25ch",
+              }}
+              variant='outlined'
+            >
               <OutlinedInput
                 size='small'
                 placeholder='Search...'
@@ -147,18 +256,12 @@ function NavBar(props) {
               />
             </FormControl>
             <IconButton sx={{ color: "black" }} size='large'>
-              <LocationOnOutlinedIcon />
+              <LocationOnOutlined />
             </IconButton>
             <IconButton sx={{ color: "black" }} size='large'>
-              <ShoppingCartOutlinedIcon />
+              <ShoppingCartOutlined />
             </IconButton>
           </Box>
-          <IconButton
-            sx={{ display: { sm: "none" }, color: "black" }}
-            size='large'
-          >
-            <ShoppingCartOutlinedIcon />
-          </IconButton>
         </Toolbar>
         <FormControl sx={{ display: { sm: "none" }, m: 1 }} variant='outlined'>
           <OutlinedInput
