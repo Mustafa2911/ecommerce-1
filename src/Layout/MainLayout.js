@@ -8,7 +8,7 @@ const MainLayout = () => {
   return (
     <Box sx={{ display: "flex" }}>
       <NavBar />
-      <Box component='main' sx={{ p: 3 }}>
+      <Box component='main' className="w-full" sx={{ p: 3 }}>
         <Toolbar />
         <Toolbar sx={{ display: { sm: "none" } }} />
         <Outlet />
