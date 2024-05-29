@@ -211,7 +211,7 @@ function NavBar(props) {
               aria-label='open drawer'
               edge='start'
               onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { sm: "none" } }}
+              sx={{ mr: 8, display: { sm: "none" } }}
             >
               <MenuIcon />
             </IconButton>
@@ -220,7 +220,7 @@ function NavBar(props) {
               {renderNavItems()}
             </Box>
           </Box>
-          <Box sx={{ display: { xs: "inline-flex" }, alignItems: "center" }}>
+          <Box sx={{ display: { xs: "flex" } }}>
             <img
               src={Logo}
               alt='Logo'
