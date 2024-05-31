@@ -202,7 +202,7 @@ function NavBar(props) {
         component='nav'
         className='border-b-[1px]'
         sx={{ boxShadow: "none" }}
-        color='transparent'
+        color='inherit'
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
