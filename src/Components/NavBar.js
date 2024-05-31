@@ -21,7 +21,6 @@ import {
   ShoppingCartOutlined,
 } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
-import Logo from "./logo.svg";
 import FormControl from "@mui/material/FormControl";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MuiAccordion from "@mui/material/Accordion";
@@ -30,6 +29,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import Logo from "../logo.svg";
 
 const drawerWidth = 240;
 const navItems = [
